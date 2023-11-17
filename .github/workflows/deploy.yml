@@ -50,10 +50,10 @@ jobs:
               sudo pip install -r requirements.txt
             
               echo "############# Server Stop #############"
-              sudo pkill uvicorn
+              sudo fuser -k 80/tcp
               
               echo "############# Server Start #############"
-              sudo python3 -m uvicorn main:app 
+              sudo python3 main.py
             else
               echo "############## git pull: Error ##############"
               exit 1;

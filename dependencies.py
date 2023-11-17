@@ -11,7 +11,6 @@ import routers.user.user_crud as user_crud
 from core.database import get_db
 
 config = Config('.env')
-SQLALCHEMY_DATABASE_URL = config('SQLALCHEMY_DATABASE_URL')
 
 ACCESS_TOKEN_EXPIRE_MINUTES = float(config('ACCESS_TOKEN_EXPIRE_MINUTES'))
 SECRET_KEY = config('SECRET_KEY')

@@ -4,11 +4,11 @@ from sqlalchemy.orm import sessionmaker
 from starlette.config import Config
 
 config = Config('.env')
-SQLALCHEMY_DATABASE_URL = config('SQLALCHEMY_DATABASE_URL')
+DATABASE_URL = f"mariadb:///?User={config.get('USER')}&Password={config.get('PASSWORD')}&Database={config.get('DATABASE')}&Server={config.get('HOST')}&Port={config.get('PORT')}"
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+# Craate Engin for mariadb
+engine = create_engine(DATABASE_URL, echo=False)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

@@ -5,7 +5,7 @@ from core.database import Base
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "Users"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     stdId = Column(String, unique=True, nullable=False)

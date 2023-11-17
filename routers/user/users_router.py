@@ -15,7 +15,6 @@ from dependencies import get_current_user
 from routers.user.user_crud import pwd_context
 
 config = Config('.env')
-SQLALCHEMY_DATABASE_URL = config('SQLALCHEMY_DATABASE_URL')
 
 ACCESS_TOKEN_EXPIRE_MINUTES = float(config('ACCESS_TOKEN_EXPIRE_MINUTES'))
 SECRET_KEY = config('SECRET_KEY')
@@ -26,7 +25,6 @@ router = APIRouter(
     prefix="/api/user",
     tags=["user"]
 )
-
 
 # User
 # Create
