@@ -39,13 +39,21 @@ jobs:
 
           script: |
             echo "#START"
+            sudo apt update && sudo apt-get -y upgrade
             cd /root/REST_API_Server
             
             echo "############# GIT PULL #############"
             pass=$(sudo git pull origin master)
             echo $pass
             if [ -n "$pass" ]; then 
+              echo "############# Install dependent #############"
+              pip install -r requirements.txt
+            
+              echo "############# Server Stop #############"
+              sudo pkill uvicorn
+              
               echo "############# Server Start #############"
+              sudo python3 -m uvicorn main:app 
             else
               echo "############## git pull: Error ##############"
               exit 1;
