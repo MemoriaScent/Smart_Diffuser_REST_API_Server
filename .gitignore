@@ -140,6 +140,7 @@ var/
 wheels/
 share/python-wheels/
 *.egg-info/
+/migrations
 .installed.cfg
 *.egg
 MANIFEST
@@ -299,7 +300,7 @@ ehthumbs_vista.db
 
 # Folder config file
 [Dd]esktop.ini
-
+alembic.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
