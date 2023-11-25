@@ -40,7 +40,7 @@ class TagInfo(Base):
     __tablename__ = 'Tag_info'
 
     id = Column(INTEGER(11), primary_key=True)
-    name = Column(String(10), nullable=False)
+    name = Column(String(10), nullable=False, unique=True)
 
 
 class User(Base):
