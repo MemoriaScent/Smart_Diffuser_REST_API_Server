@@ -25,6 +25,6 @@ router = APIRouter(
 # Create
 @router.post("/tag_list", response_model=tag.TagList)
 def create_tag(tag_list: tag.TagStrList, db: Session = Depends(get_db)):
-    return {"tag_list": tag_crud.get_tag_list(db, tag_list.tag_list).tag_list}
+    return {"tag_list": tag_crud.get_tag_info_list(db, tag_list.tag_list).tag_list}
 
 
