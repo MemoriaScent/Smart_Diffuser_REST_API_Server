@@ -2,10 +2,10 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from core.models.models import User
-from core.schemas.tag import TagInfo, Tag, TagInfoCreate, TagList, TagCreate, AddTag
+from core.models.models import Tag, TagInfo
+from core.schemas.tag import TagCreate, TagInfoCreate, AddTag, TagList, TagInformation
 
-# 하나의 유저 레시피에 추가 할 수 있는 태긔의 개수
+# 하나의 유저 레시피에 추가 할 수 있는 태그의 개수
 TAG_LIMIT = 5
 
 
@@ -21,8 +21,19 @@ def create_tag(db: Session, tag_create: TagCreate):
     db.commit()
 
 
-def get_existing_tag(db: Session, tag_name: str):
-    return db.query(TagInfo).filter(TagInfo.name == tag_name).first()
+def get_tag_info(db: Session, tag_name: str):
+    _db_tag = db.query(TagInfo).filter(TagInfo.name == tag_name).first()
+    return _db_tag
+
+
+def get_tag_info_list(db: Session, tag_list: list[str]):
+    # 태그 이름 리스트를 받아서 태그 info 리스트를 반환합니다.
+    # 만약 태그가 존재하지 않는다면 새로 생성합니다.
+    for tag_name in tag_list:
+        if not get_tag_info(db, tag_name):
+            create_tag_info(db, TagInfoCreate(name=tag_name))
+
+    return [get_tag_info(db, tag_name) for tag_name in tag_list]
 
 
 def get_similar_tag_list(db: Session, limit: int = 5, keyword: str = ''):
@@ -43,7 +54,7 @@ def get_similar_tag_list(db: Session, limit: int = 5, keyword: str = ''):
 
 
 def create_tag_info(db: Session, tag_info_create: TagInfoCreate):
-    if get_existing_tag(db, tag_info_create.name):
+    if get_tag_info(db, tag_info_create.name):
         return
 
     db_tag_info = TagInfo(
@@ -58,9 +69,9 @@ def add_tag(db: Session, tag_list: AddTag):
     if db.query(func.count(Tag.tag_id)).filter(Tag.recipe_id == tag_list.recipe_id).scalar() >= TAG_LIMIT:
         return
     for tag_name in tag_list.tag_list:
-        if not get_existing_tag(db, tag_name):
+        if not get_tag_info(db, tag_name):
             create_tag_info(db, TagInfoCreate(name=tag_name))
-        tag_id = get_existing_tag(db, tag_name).id
+        tag_id = get_tag_info(db, tag_name).id
         create_tag(db, TagCreate(recipe_id=tag_list.recipe_id, tag_id=tag_id))
 
 

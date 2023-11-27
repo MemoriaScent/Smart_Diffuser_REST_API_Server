@@ -14,6 +14,7 @@ from fastapi.responses import HTMLResponse
 
 from internal import admin
 from routers.user import users_router as user
+from routers.tag import tag_router as tag
 
 app = FastAPI()
 
@@ -22,6 +23,7 @@ app.include_router(admin.router)
 
 # routers
 app.include_router(user.router)
+app.include_router(tag.router)
 
 @app.get("/")
 async def root():

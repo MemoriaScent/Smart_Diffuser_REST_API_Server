@@ -20,8 +20,7 @@ def create_user(db: Session, user_create: UserCreate):
 
 
 def get_existing_user(db: Session, user_create: UserCreate):
-    _db_user = db.query(User).filter(User.stdId == user_create.stdId, User.hide == 0).first()
-    return
+    return get_user(db, user_create.stdId)
 
 
 def get_user(db: Session, student_id: str):
