@@ -4,8 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from starlette.config import Config
 
 config = Config('.env')
-DATABASE_URL = f"mariadb+mariadbconnector://:{config.get('PASSWORD')}@{config.get('HOST')}:{config.get('PORT')}/{config.get('DATABASE')}"
-
+DATABASE_URL = f"mariadb+mariadbconnector://{config.get('USER')}:{config.get('PASSWORD')}@{config.get('HOST')}:{config.get('PORT')}/{config.get('DATABASE')}"
 # Craate Engin for mariadb
 engine = create_engine(DATABASE_URL, echo=False)
 
