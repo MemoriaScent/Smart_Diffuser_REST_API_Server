@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
 
-import internal.admin_crud as admin_crud
+import internal.admin.admin_crud as admin_crud
 from core.database import get_db
 from core.models import models
 from dependencies import get_current_user, Authority

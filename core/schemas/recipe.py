@@ -6,7 +6,7 @@ from pydantic import BaseModel, field_validator
 
 class Recipe(BaseModel):
     id: int
-    set_id: int
+    set_id: int | None
     user_id: int
     title: str
     description: str
@@ -15,7 +15,7 @@ class Recipe(BaseModel):
 
 
 class RecipeCreate(BaseModel):
-    set_id: int
+    set_id: int | None = None
     title: str
     description: str
 

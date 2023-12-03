@@ -18,6 +18,7 @@ from core.schemas import recipe
 from core.schemas import tag
 from dependencies import get_current_user
 import routers.recipe.recipe_crud as recipe_crud
+import util.file_crud as file_crud
 
 config = Config('.env')
 
@@ -28,32 +29,21 @@ router = APIRouter(
 
 # Todo 계정 관련하여 추가하여야 함.
 # Create
-@router.post("/", status_code=status.HTTP_204_NO_CONTENT,
-             description='new_recipe는 다음과 같이 입력해주세요. new_recipe={"set_id": 0, "title": "string", "description": "string"}')
-async def create_recipe(new_recipe: str = Form(...),
+@router.post("/", status_code=status.HTTP_200_OK)
+async def create_recipe(new_recipe: str = Form(..., description='레시피 정보 Json 형식, set_id의 경우 옵션 new_recipe={"set_id": 0, "title": "string", "description": "string"}'),
                         file: UploadFile = File(None),
                         db: Session = Depends(get_db)
                         ):
     data = json.loads(new_recipe.replace("new_recipe=", ""))
     create_recipe = recipe.RecipeCreate(**data)
 
+    file_id = None
+
     if file:
-        file_name = (hashlib.sha256(
-            f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{file.filename}".encode())
-                     .hexdigest() + "." + file.filename.split('.')[-1])
+        file_id = await file_crud.create_file(db, file)
 
-        file_location = f"./static/img/recipe/"
-
-        # 파일 경로가 없다면 생성
-        import os
-        if not os.path.exists(os.path.dirname(file_location)):
-            os.makedirs(file_location)
-
-        file_location = os.path.join(file_location,file_name)
-        async with aiofiles.open(file_location, 'wb+') as f:
-            while content := await file.read(1024):
-                await f.write(content)
-    else:
-        file_location = None
-
-    recipe_crud.create_recipe(db, file_location, create_recipe)
+    try:
+        return {"recipe": recipe_crud.create_recipe(db, file_id, create_recipe)}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                      detail=f"레시피 생성에 실패하였습니다. {e}")

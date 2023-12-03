@@ -1,18 +1,10 @@
-from typing import Annotated
-
 import uvicorn
 from fastapi import (
-    Cookie,
     FastAPI,
-    Query,
-    WebSocket,
-    WebSocketException,
-    WebSocketDisconnect,
-    status,
 )
-from fastapi.responses import HTMLResponse
 
-from internal import admin
+from internal.admin import admin_router as admin
+from internal.file import file_router as file
 from routers.user import users_router as user
 from routers.tag import tag_router as tag
 from routers.recipe import recipe_router as recipe
@@ -21,6 +13,7 @@ app = FastAPI()
 
 # internal
 app.include_router(admin.router)
+app.include_router(file.router)
 
 # routers
 app.include_router(user.router)
