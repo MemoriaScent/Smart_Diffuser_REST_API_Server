@@ -71,8 +71,7 @@ def add_tag(db: Session, tag_list: AddTag):
     for tag_name in tag_list.tag_list:
         if not get_tag_info(db, tag_name):
             create_tag_info(db, TagInfoCreate(name=tag_name))
-        tag_id = get_tag_info(db, tag_name).id
-        create_tag(db, TagCreate(recipe_id=tag_list.recipe_id, tag_id=tag_id))
+        create_tag(db, TagCreate(recipe_id=tag_list.recipe_id, tag_id=get_tag_info(db, tag_name).id))
 
 
 def delete_tag(db: Session, tag_id: int, recipe_id: int):
